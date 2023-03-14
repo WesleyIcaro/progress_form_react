@@ -18,6 +18,8 @@ radio - gênero
 
 Para validação de e-mail use a seguinte RegEx: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+
+
 * FUNCIONAMENTO
 Espera-se que o formulário tenha 4 campos ao todo. Portanto, quando o usuário preencher
 o primeiro campo, a barra de progresso deve assumir 25% do tamanho total;
@@ -35,25 +37,57 @@ Ao enviar, deve-se apresentar um alert javascript com sucesso, limpar todos os c
 do formulário e zerar a barra de progresso novamente.
 */
 
+import { useState } from "react";
+
 function App() {
+  const [login, setLogin] = useState('')
+
+  const handleSubmit = () => {
+    login = {
+      fullName: fullName,
+      email: email,
+      situation: situation,
+      gender: gender
+    }
+  }
+
+  const handleEmail = (event) => {
+    const value = event.target.value;
+    if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value))
+      return setLogin(setLogin.email) && console.log(login.email)
+    else (
+      console.log('ERRO!')
+    )
+    
+  }
+
+
+
+
+
   return (
     <div className='App'>
       <h3>desafio fernandev</h3>
       <h1>progresso do formulário</h1>
 
       <main>
+        <div className="bar-container">
+          <div className="bar">
+
+          </div>
+        </div>
         {/* crie a barra de progresso aqui */}
         <div className='form-group'>
-          <label htmlFor=''>Nome Completo</label>
-          <input />
+          <label htmlFor='name'>Nome Completo</label>
+          <input name="name" />
         </div>
         <div className='form-group'>
-          <label htmlFor=''>E-mail</label>
-          <input />
+          <label htmlFor='email'>E-mail</label>
+          <input name="email" onChange={handleEmail}/>
         </div>
         <div className='form-group'>
-          <label htmlFor=''>Estado Civil</label>
-          <select>
+          <label htmlFor='select'>Estado Civil</label>
+          <select name="select">
             <option value=''>- selecione...</option>
             <option value='solteiro'>Solteiro</option>
             <option value='casado'>Casado</option>
@@ -61,13 +95,13 @@ function App() {
           </select>
         </div>
         <div className='form-group'>
-          <label htmlFor=''>Gênero</label>
+          <label htmlFor='gender'>Gênero</label>
           <div className='radios-container'>
             <span>
-              <input type='radio' /> Masculino
+              <input type='radio' name="gender"/> Masculino
             </span>
             <span>
-              <input type='radio' /> Feminino
+              <input type='radio' name="gender"/> Feminino
             </span>
           </div>
         </div>
