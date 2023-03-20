@@ -40,30 +40,69 @@ do formulário e zerar a barra de progresso novamente.
 import { useState } from "react";
 
 function App() {
-  const [login, setLogin] = useState('')
+  const [data, setData] = useState({
+      fullName: '',
+      email: '',
+      maritalStatus: '',
+      genre: ''
+    })
 
-  const handleSubmit = () => {
-    login = {
-      fullName: fullName,
-      email: email,
-      situation: situation,
-      gender: gender
-    }
-  }
-
-  const handleEmail = (event) => {
-    const value = event.target.value;
-    if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value))
-      return setLogin(setLogin.email) && console.log(login.email)
-    else (
-      console.log('ERRO!')
-    )
+  const handleChange = (event) => {
+    console.log(event)
     
+    const { name, value } = event.target;
+
+    setData((prev) => {
+      const newData = { ...prev, [name]: value}
+      console.log(newData)
+      return newData
+    })
+  }
+  
+  const calculateProgress = () => {
+
+    let value = 0;
+    let amountToAdd = 25;
+
+    if (data.fullName) {
+      const explodeString = data.fullName.split(' ')
+      console.log(explodeString);
+      if (explodeString[1]) {
+        value += amountToAdd;
+      }
+    }
+    if (data.email) {
+      let pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+      if (pattern.test(data.email)) {
+        value += amountToAdd;
+      }
+    }
+    if (data.genre) {
+      value += amountToAdd;
+    }
+    if (data.maritalStatus) {
+      value += amountToAdd;
+    }
+
+    // console.log({ value })
+    
+    return value
   }
 
 
+  calculateProgress()
 
-
+  const handleClick = () => {
+    alert('Formulário enviado com sucesso!')
+    console.log(data)
+    setData({
+      fullName: '',
+      email: '',
+      maritalStatus: '',
+      genre:''
+    })
+  }
 
   return (
     <div className='App'>
@@ -72,22 +111,20 @@ function App() {
 
       <main>
         <div className="bar-container">
-          <div className="bar">
-
+          <div className="bar" style={{ width:`${calculateProgress()}%`}}>
           </div>
         </div>
-        {/* crie a barra de progresso aqui */}
         <div className='form-group'>
-          <label htmlFor='name'>Nome Completo</label>
-          <input name="name" />
+          <label htmlFor='fullName'>Nome Completo</label>
+          <input name="fullName" value={data.fullName} onChange={handleChange} />
         </div>
         <div className='form-group'>
           <label htmlFor='email'>E-mail</label>
-          <input name="email" onChange={handleEmail}/>
+          <input name="email" onChange={handleChange} value={data.email}/>
         </div>
         <div className='form-group'>
-          <label htmlFor='select'>Estado Civil</label>
-          <select name="select">
+          <label htmlFor='maritalStatus'>Estado Civil</label>
+          <select name="maritalStatus" value={data.maritalStatus} onChange={handleChange}>
             <option value=''>- selecione...</option>
             <option value='solteiro'>Solteiro</option>
             <option value='casado'>Casado</option>
@@ -95,17 +132,17 @@ function App() {
           </select>
         </div>
         <div className='form-group'>
-          <label htmlFor='gender'>Gênero</label>
+          <label htmlFor='genre'>Gênero</label>
           <div className='radios-container'>
             <span>
-              <input type='radio' name="gender"/> Masculino
+              <input type='radio' name="genre" value={'masculino'} onChange={handleChange} checked={data.genre === 'masculino'} /> Masculino
             </span>
             <span>
-              <input type='radio' name="gender"/> Feminino
+              <input type='radio' name="genre" value={'feminino'} onChange={handleChange} checked={data.genre === 'feminino'}/> Feminino
             </span>
           </div>
         </div>
-        <button>Enviar Formulário</button>
+        <button onClick={handleClick} disabled={calculateProgress() !== 100}>Enviar Formulário</button>
       </main>
     </div>
   );
